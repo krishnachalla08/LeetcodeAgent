@@ -1,0 +1,28 @@
+name: LeetCode Daily Reminder Agent
+
+on:
+  schedule:
+    # Runs everyday at 02:30 UTC (8:00 AM IST)
+    - cron: '30 2 * * *'
+  workflow_dispatch: # Allows you to manually click a button to test run it anytime
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Run LeetCode Agent
+      env:
+        GEMINI_API_KEY: ${{ secrets::GEMINI_API_KEY }}
+        DISCORD_WEBHOOK_URL: ${{ secrets::DISCORD_WEBHOOK_URL }}
+      run: |
+        java LeetCodeAgent.java
