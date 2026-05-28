@@ -3,7 +3,7 @@ name: LeetCode Daily Reminder Agent
 on:
   schedule:
     # Runs everyday at 02:30 UTC (8:00 AM IST)
-    - cron: '25 6 * * *'
+    - cron: '20 6 * * *'
   workflow_dispatch: # Allows you to manually click a button to test run it anytime
 
 jobs:
