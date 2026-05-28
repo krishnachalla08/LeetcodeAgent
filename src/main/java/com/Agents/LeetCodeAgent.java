@@ -146,16 +146,21 @@ public class LeetCodeAgent {
 
     private static String parseSection(String text, String startKeyword, String endKeyword) {
         try {
-            int start = text.indexOf(startKeyword);
-            if (start == -1) return "";
-            start += startKeyword.length();
+            // This regex looks for the start keyword, ignoring case and optional markdown asterisks (like **HINT:**)
+            // It captures everything up until it hits the end keyword or the end of the text ($)
+            String cleanStart = startKeyword.replace(":", "");
+            String cleanEnd = endKeyword.equals("$") ? "$" : endKeyword.replace(":", "");
 
-            int end = endKeyword.equals("$") ? text.length() : text.indexOf(endKeyword, start);
-            if (end == -1) end = text.length();
+            String regex = "(?i)\\*?\\*?" + cleanStart + "\\*?\\*?:?\\s*(.*?)\\s*(?=\\*?\\*?" + cleanEnd + "\\*?\\*?:?|$)";
+            Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(text);
 
-            return text.substring(start, end).trim();
+            if (matcher.find()) {
+                return matcher.group(1).trim();
+            }
         } catch (Exception e) {
-            return "";
+            System.out.println("Error parsing section " + startKeyword + ": " + e.getMessage());
         }
+        return "";
     }
 }
